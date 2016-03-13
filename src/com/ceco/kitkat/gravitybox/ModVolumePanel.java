@@ -393,7 +393,7 @@ public class ModVolumePanel {
     }
 
     private static void updateVolumePanelMode() {
-        if (mVolumePanel == null) return;
+        if ((mVolumePanel == null) || (mExpandable == false)) return;
 
         try {
             View mMoreButton = (View) XposedHelpers.getObjectField(mVolumePanel, "mMoreButton");
