@@ -211,20 +211,36 @@ public class ModExpandedDesktop {
                         = navigationBarHeightForRotation[upsideDownRotation]
                         = navigationBarHeightForRotation[landscapeRotation]
                         = navigationBarHeightForRotation[seascapeRotation] = 0;
-            } else if (mNavbarDimensions != null) {
+            } else {
+                final int resWidthId = mContext.getResources().getIdentifier(
+                        "navigation_bar_width", "dimen", "android");
+                final int resHeightId = mContext.getResources().getIdentifier(
+                        "navigation_bar_height", "dimen", "android");
+                final int resHeightLandscapeId = mContext.getResources().getIdentifier(
+                        "navigation_bar_height_landscape", "dimen", "android");
+
+
                 navigationBarHeightForRotation[portraitRotation] =
                 navigationBarHeightForRotation[upsideDownRotation] =
-                        mNavbarDimensions.hPort;
+                    (int) (mContext.getResources().getDimensionPixelSize(resHeightId)
+                    * mNavbarHeightScaleFactor);
+
                 navigationBarHeightForRotation[landscapeRotation] =
                 navigationBarHeightForRotation[seascapeRotation] =
-                        mNavbarDimensions.hLand;
+                    (int) (mContext.getResources().getDimensionPixelSize(resHeightLandscapeId)
+                    * mNavbarHeightLandscapeScaleFactor);
+
 
                 navigationBarWidthForRotation[portraitRotation] =
                 navigationBarWidthForRotation[upsideDownRotation] =
                 navigationBarWidthForRotation[landscapeRotation] =
                 navigationBarWidthForRotation[seascapeRotation] =
-                        mNavbarDimensions.wPort;
+                    (int) (mContext.getResources().getDimensionPixelSize(resWidthId)
+                    * mNavbarWidthScaleFactor);
+
             }
+            XposedHelpers.setObjectField(mPhoneWindowManager, "mNavigationBarWidthForRotation", navigationBarWidthForRotation);
+            XposedHelpers.setObjectField(mPhoneWindowManager, "mNavigationBarHeightForRotation", navigationBarHeightForRotation);
 
             XposedHelpers.callMethod(mPhoneWindowManager, "updateRotation", false);
         } catch (Throwable t) {
